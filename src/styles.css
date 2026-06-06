@@ -1,0 +1,696 @@
+/* ============================================================
+   Valuta Azienda — tema "dossier" su carta calda
+   ============================================================ */
+
+:root {
+  --paper: #f3ecdf;
+  --paper-2: #fbf7ee;
+  --ink: #211c15;
+  --ink-soft: #5c5345;
+  --muted: #8c8170;
+  --line: #ddd1bd;
+  --line-soft: #e7ddcc;
+
+  --accent: #bd4b2c; /* terracotta */
+  --accent-deep: #9a3a1f;
+  --green: #2f6b54; /* verde positivo */
+  --green-soft: #e3efe7;
+  --red: #b23a2e;
+
+  --shadow: 0 1px 0 rgba(0, 0, 0, 0.02), 0 18px 40px -28px rgba(60, 40, 20, 0.45);
+  --radius: 14px;
+
+  --serif: 'Fraunces', Georgia, serif;
+  --sans: 'Hanken Grotesk', system-ui, sans-serif;
+  --mono: 'Spline Sans Mono', ui-monospace, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+
+/* texture sottile della carta */
+.grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+  background-image: radial-gradient(
+      circle at 20% 30%,
+      rgba(189, 75, 44, 0.05),
+      transparent 45%
+    ),
+    radial-gradient(circle at 85% 15%, rgba(47, 107, 84, 0.05), transparent 40%);
+}
+
+.page {
+  position: relative;
+  z-index: 1;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+
+/* ---------------- HERO ---------------- */
+
+.hero {
+  margin-bottom: 40px;
+  padding-bottom: 28px;
+  border-bottom: 1.5px solid var(--line);
+}
+
+.hero-kicker {
+  font-family: var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: 0.72rem;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+
+.hero-title {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(2.6rem, 7vw, 5rem);
+  line-height: 0.96;
+  letter-spacing: -0.02em;
+  margin: 0 0 18px;
+}
+
+.hero-title .accent {
+  color: var(--accent);
+}
+
+.hero-sub {
+  max-width: 560px;
+  font-size: 1.08rem;
+  color: var(--ink-soft);
+  margin: 0 0 22px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* ---------------- CARD ---------------- */
+
+.card {
+  background: var(--paper-2);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  padding: 30px;
+  margin-bottom: 28px;
+  box-shadow: var(--shadow);
+}
+
+.card-head {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  margin-bottom: 22px;
+}
+
+.step {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  display: grid;
+  place-items: center;
+  margin-top: 2px;
+}
+
+.card-head h2,
+.section-title h2 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1.6rem;
+  margin: 0 0 4px;
+  letter-spacing: -0.01em;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* ---------------- BILANCIA ---------------- */
+
+.balance-labels {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  margin-bottom: 12px;
+}
+
+.balance-labels strong {
+  color: var(--ink);
+  font-size: 1.1rem;
+}
+
+/* ---------------- SLIDER ---------------- */
+
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 6px;
+  background: var(--line);
+  outline: none;
+  cursor: pointer;
+}
+.slider.big {
+  height: 10px;
+  border-radius: 10px;
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid var(--paper-2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+.slider.big::-webkit-slider-thumb {
+  width: 28px;
+  height: 28px;
+}
+.slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid var(--paper-2);
+  cursor: pointer;
+}
+
+/* ---------------- CRITERI ---------------- */
+
+.criteria-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.criterion {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--paper);
+  border: 1.5px solid var(--line-soft);
+  border-radius: 10px;
+  padding: 8px 10px 8px 16px;
+}
+
+.crit-name {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--ink);
+  font-weight: 500;
+  padding: 6px 0;
+}
+.crit-name:focus {
+  outline: none;
+}
+
+.crit-weight {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--paper-2);
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  padding: 4px 10px;
+}
+.crit-weight input {
+  width: 48px;
+  border: none;
+  background: transparent;
+  text-align: right;
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+.crit-weight input:focus {
+  outline: none;
+}
+.crit-weight span {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.85rem;
+}
+
+.criteria-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.weight-sum {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.weight-sum.ok {
+  color: var(--green);
+}
+.weight-sum.warn {
+  color: var(--accent-deep);
+}
+
+/* ---------------- BOTTONI ---------------- */
+
+.btn {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.92rem;
+  background: var(--ink);
+  color: var(--paper);
+  border: 1.5px solid var(--ink);
+  border-radius: 9px;
+  padding: 10px 18px;
+  cursor: pointer;
+  transition: transform 0.08s ease, background 0.15s ease;
+}
+.btn:hover {
+  transform: translateY(-1px);
+}
+.btn:active {
+  transform: translateY(0);
+}
+.btn.ghost {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--line);
+}
+.btn.ghost:hover {
+  border-color: var(--ink);
+}
+.btn.tiny {
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.icon-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1.5px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.icon-btn:hover {
+  border-color: var(--red);
+  color: var(--red);
+  background: #fdeceb;
+}
+
+/* ---------------- AZIENDE ---------------- */
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 44px 0 22px;
+}
+
+.companies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: 22px;
+}
+
+.company {
+  background: var(--paper-2);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px;
+  box-shadow: var(--shadow);
+}
+
+.company-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.company-name {
+  flex: 1;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1.25rem;
+  border: none;
+  background: transparent;
+  color: var(--ink);
+  border-bottom: 2px solid transparent;
+  padding: 2px 0;
+}
+.company-name:focus {
+  outline: none;
+  border-bottom-color: var(--accent);
+}
+
+.block-title {
+  font-family: var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.7rem;
+  color: var(--accent);
+  margin: 22px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px dashed var(--line);
+}
+
+/* campo */
+.field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 5px 0;
+}
+.field-label {
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+}
+.field-input {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--paper);
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  padding: 5px 10px;
+}
+.field-input input {
+  width: 78px;
+  border: none;
+  background: transparent;
+  text-align: right;
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+.field-input input:focus {
+  outline: none;
+}
+.field-input em {
+  font-style: normal;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  min-width: 30px;
+}
+
+/* segmented control */
+.seg {
+  display: flex;
+  gap: 6px;
+  background: var(--paper);
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 6px;
+}
+.seg-btn {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  padding: 7px 4px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.seg-btn.active {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* mini summary */
+.mini-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 16px;
+  padding: 12px;
+  background: var(--paper);
+  border: 1.5px solid var(--line-soft);
+  border-radius: 10px;
+}
+.mini-summary div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.mini-summary span {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+.mini-summary strong {
+  font-family: var(--mono);
+  font-size: 0.98rem;
+}
+.mini-summary .pos strong {
+  color: var(--green);
+}
+.mini-summary .neg strong {
+  color: var(--red);
+}
+
+/* score */
+.score-row {
+  margin: 12px 0;
+}
+.score-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+  color: var(--ink-soft);
+}
+.score-label strong {
+  font-family: var(--mono);
+  color: var(--accent);
+}
+
+/* aggiungi azienda */
+.add-company {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 200px;
+  border: 2px dashed var(--line);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.add-company span {
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 1;
+}
+.add-company:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(189, 75, 44, 0.03);
+}
+
+/* ---------------- RISULTATI ---------------- */
+
+.results {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+.results .card-head h2 {
+  color: var(--paper);
+}
+.results .step {
+  color: #f0c4a0;
+  border-color: #f0c4a0;
+}
+.results .muted {
+  color: #b7aa97;
+}
+
+.winner {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+  background: linear-gradient(110deg, var(--accent), var(--accent-deep));
+  border-radius: 12px;
+  padding: 22px 26px;
+  margin-bottom: 26px;
+}
+.winner-tag {
+  font-family: var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.85);
+  width: 100%;
+}
+.winner-name {
+  font-family: var(--serif);
+  font-size: 1.9rem;
+  font-weight: 600;
+  flex: 1;
+  min-width: 200px;
+}
+.winner-score {
+  font-family: var(--mono);
+  font-size: 2.6rem;
+  font-weight: 600;
+}
+.winner-score small {
+  font-size: 1rem;
+  opacity: 0.7;
+}
+
+.ranking {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.rank-row {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 14px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+.rank-pos {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #f0c4a0;
+  width: 30px;
+  text-align: center;
+}
+.rank-main {
+  flex: 1;
+}
+.rank-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+.rank-name {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+.rank-final {
+  font-family: var(--mono);
+  font-size: 1.2rem;
+  color: #f0c4a0;
+}
+.rank-bar {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.rank-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #f0c4a0, var(--accent));
+  border-radius: 8px;
+  transition: width 0.4s ease;
+}
+.rank-detail {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  font-size: 0.82rem;
+  color: #b7aa97;
+}
+.rank-detail b {
+  color: var(--paper);
+  font-family: var(--mono);
+}
+
+/* ---------------- FOOTER ---------------- */
+
+.foot {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-family: var(--mono);
+}
+
+/* ---------------- RESPONSIVE ---------------- */
+
+@media (max-width: 560px) {
+  .page {
+    padding: 32px 16px 60px;
+  }
+  .card {
+    padding: 22px 18px;
+  }
+  .companies-grid {
+    grid-template-columns: 1fr;
+  }
+  .mini-summary {
+    grid-template-columns: 1fr;
+  }
+}
