@@ -18,6 +18,8 @@ const num = (v) => {
   return Number.isFinite(n) ? n : 0
 }
 
+const pct = (n) => `${Math.round(n)}%`
+
 /* ------------------------------------------------------------------ */
 /*  Dati di partenza (esempio modificabile)                           */
 /* ------------------------------------------------------------------ */
@@ -239,13 +241,33 @@ export default function App() {
           max === min ? 100 : ((r.disposable - min) / (max - min)) * 100
         // qualità: scala assoluta su 10 -> 0-100
         const qualNorm = (r.quality / 10) * 100
-        const final = econW * econNorm + qualW * qualNorm
-        return { ...r, econNorm, qualNorm, final }
+        const econPoints = econW * econNorm
+        const qualPoints = qualW * qualNorm
+        const final = econPoints + qualPoints
+        return { ...r, econNorm, qualNorm, econPoints, qualPoints, final }
       })
       .sort((a, b) => b.final - a.final)
   }, [companies, criteria, economicWeight])
 
   const best = results[0]
+  const second = results[1]
+  const bestMoney = results.reduce(
+    (bestRow, row) =>
+      !bestRow || row.disposable > bestRow.disposable ? row : bestRow,
+    null
+  )
+  const bestQuality = results.reduce(
+    (bestRow, row) =>
+      !bestRow || row.quality > bestRow.quality ? row : bestRow,
+    null
+  )
+  const decisionGap = best && second ? best.final - second.final : 0
+  const balanceCopy =
+    economicWeight >= 75
+      ? 'Stai privilegiando molto i soldi: una differenza economica puo ribaltare facilmente la classifica.'
+      : economicWeight <= 25
+        ? 'Stai privilegiando molto la qualita: un lavoro piu adatto puo vincere anche se rende meno.'
+        : 'Stai cercando un equilibrio: soldi e qualita contribuiscono entrambi in modo importante.'
 
   /* ---------------- render ---------------- */
 
@@ -274,15 +296,32 @@ export default function App() {
         <div className="card-head">
           <span className="step">01</span>
           <div>
-            <h2>Quanto contano i soldi?</h2>
+            <h2>Decidi come leggere il punteggio</h2>
             <p className="muted">
-              Sposta il cursore per decidere il peso dell&rsquo;aspetto economico
-              rispetto a quello qualitativo nel punteggio finale.
+              Questo cursore non valuta un&rsquo;azienda: decide quanto il punteggio
+              finale deve dare peso ai soldi rispetto alla qualita del lavoro.
             </p>
           </div>
         </div>
 
         <div className="balance-body">
+          <div className="balance-explainer">
+            <div>
+              <span className="eyebrow">Formula attuale</span>
+              <strong>
+                {pct(economicWeight)} economia + {pct(100 - economicWeight)} qualita
+              </strong>
+              <p>
+                Se metti economia a 80, il risultato finale dipende per 80 punti
+                dai soldi e solo per 20 dalla valutazione qualitativa. Per questo
+                il cursore incide moltissimo.
+              </p>
+            </div>
+            <div className="balance-reading">
+              <span className="eyebrow">Lettura</span>
+              <p>{balanceCopy}</p>
+            </div>
+          </div>
           <div className="balance-labels">
             <span>
               Qualità <strong>{100 - economicWeight}%</strong>
@@ -299,6 +338,21 @@ export default function App() {
             onChange={(e) => update({ economicWeight: num(e.target.value) })}
             className="slider big"
           />
+          <div className="preset-row" aria-label="Scorciatoie peso punteggio">
+            {[
+              [20, 'Scelgo per qualita'],
+              [50, 'Equilibrio'],
+              [80, 'Scelgo per soldi']
+            ].map(([value, label]) => (
+              <button
+                key={value}
+                className={'preset-btn ' + (economicWeight === value ? 'active' : '')}
+                onClick={() => update({ economicWeight: value })}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -541,6 +595,30 @@ export default function App() {
           </div>
         )}
 
+        <div className="decision-grid">
+          <div className="decision-card">
+            <span>Margine sulla seconda</span>
+            <strong>{second ? `${decisionGap.toFixed(1)} punti` : 'N/D'}</strong>
+            <small>
+              {second && decisionGap < 5
+                ? 'Scelta molto vicina: guarda bene i dettagli.'
+                : second
+                  ? 'Vantaggio abbastanza netto con i pesi attuali.'
+                  : 'Aggiungi un altra azienda per confrontare meglio.'}
+            </small>
+          </div>
+          <div className="decision-card">
+            <span>Migliore per soldi</span>
+            <strong>{bestMoney?.name || 'N/D'}</strong>
+            <small>{bestMoney ? `${euro(bestMoney.disposable)} in tasca` : ''}</small>
+          </div>
+          <div className="decision-card">
+            <span>Migliore per qualita</span>
+            <strong>{bestQuality?.name || 'N/D'}</strong>
+            <small>{bestQuality ? `${bestQuality.quality.toFixed(1)}/10` : ''}</small>
+          </div>
+        </div>
+
         <div className="ranking">
           {results.map((r, i) => (
             <div className="rank-row" key={r.id}>
@@ -565,6 +643,14 @@ export default function App() {
                   </span>
                   <span>
                     Costi <b>{euro(r.costs)}</b>
+                  </span>
+                </div>
+                <div className="score-breakdown">
+                  <span>
+                    Economia: <b>{r.econPoints.toFixed(1)}</b> punti
+                  </span>
+                  <span>
+                    Qualita: <b>{r.qualPoints.toFixed(1)}</b> punti
                   </span>
                 </div>
               </div>
